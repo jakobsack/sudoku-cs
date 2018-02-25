@@ -1,0 +1,4 @@
+# ignore compiler stuff
+bin
+obj
+
