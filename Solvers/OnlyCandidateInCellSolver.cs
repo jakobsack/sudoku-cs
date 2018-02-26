@@ -35,18 +35,13 @@ namespace Sudoku.Solvers
         public override List<Cell> Find()
         {
             List<Cell> cells = new List<Cell>();
-            for (int row = 0; row < 9; row++)
+
+            foreach (Cell cell in Field.AllCells().Where(x => x.Candidates.Count == 1))
             {
-                for (int col = 0; col < 9; col++)
-                {
-                    Cell cell = Field.GetCell(col, row);
-                    if (cell.Candidates.Count == 1)
-                    {
-                        cell.Value = cell.Candidates.First();
-                        cells.Add(cell);
-                    }
-                }
+                cell.Number = cell.Candidates.First();
+                cells.Add(cell);
             }
+
             return cells;
         }
     }

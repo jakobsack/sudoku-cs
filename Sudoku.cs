@@ -56,8 +56,8 @@ namespace Sudoku
                 {
                     int value = int.Parse(cells.ElementAt(column));
                     Cell cell = Field.GetCell(column, row);
-                    cell.Value = value;
-                    Field.InsertCell(cell);
+                    cell.Number = value;
+                    Field.ReplaceCell(cell);
                 }
             }
 
@@ -82,8 +82,8 @@ namespace Sudoku
                 bool repeatLoop = false;
 
                 // Limit insertion candidates
-                repeatLoop = repeatLoop || new OtherRowsAreBlocked(board).Run();
-                repeatLoop = repeatLoop || new OtherColumnsAreBlocked(board).Run();
+                //repeatLoop = repeatLoop || new OtherRowsAreBlocked(board).Run();
+                //repeatLoop = repeatLoop || new OtherColumnsAreBlocked(board).Run();
                 repeatLoop = repeatLoop || new EqualOptionsInRowReducer(board).Run();
                 repeatLoop = repeatLoop || new EqualOptionsInColumnReducer(board).Run();
                 repeatLoop = repeatLoop || new EqualOptionsInQuadReducer(board).Run();
@@ -108,8 +108,8 @@ namespace Sudoku
                         {
                             Board newBoard = new Board(board);
                             Cell assumedCell = new Cell(cell);
-                            assumedCell.Value = candidate;
-                            newBoard.InsertCell(assumedCell);
+                            assumedCell.Number = candidate;
+                            newBoard.ReplaceCell(assumedCell);
 
                             if (SolveHelper(newBoard))
                             {
@@ -117,7 +117,7 @@ namespace Sudoku
 
                                 foreach (Cell solvedCell in newBoard.AllCells())
                                 {
-                                    board.InsertCell(solvedCell);
+                                    board.ReplaceCell(solvedCell);
                                 }
                                 return true;
                             }
@@ -134,14 +134,14 @@ namespace Sudoku
             Console.WriteLine("Result:");
             PrintField();
 
-            Console.WriteLine();
+            Console.WriteLine(String.Format("Board is valid: {0}", Field.Validate() ? "yes" : "no"));
             Console.WriteLine(String.Format("Iterations: {0}", Iterations));
             Console.WriteLine(String.Format("Determined {0} out of {1} unknowns", InitialUnknown - Field.UnknownValues(), InitialUnknown));
             Console.WriteLine();
             Console.WriteLine("{0} cells had to be guessed{1}", AssumedCells.Count, AssumedCells.Count == 0 ? "" : ":");
             foreach (Cell cell in AssumedCells)
             {
-                Console.WriteLine("Number {0} at column {1}, row {2}", cell.Value, cell.X, cell.Y);
+                Console.WriteLine("Number {0} at column {1}, row {2}", cell.Number, cell.Column, cell.Row);
             }
         }
 
@@ -151,7 +151,7 @@ namespace Sudoku
             {
                 for (int col = 0; col < 9; col++)
                 {
-                    int value = Field.GetCell(col, row).Value;
+                    int value = Field.GetCell(col, row).Number;
 
                     Console.Write(value);
                     Console.Write(' ');

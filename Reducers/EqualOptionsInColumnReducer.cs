@@ -36,9 +36,9 @@ namespace Sudoku.Reducers
         {
             List<Cell> cells = new List<Cell>();
 
-            for (int col = 0; col < 9; col++)
+            for (int column = 0; column < 9; column++)
             {
-                cells.AddRange(FindParallelCandidates(Field.Column(col)));
+                cells.AddRange(FindParallelCandidates(Field.Column(column)));
             }
             return cells;
         }

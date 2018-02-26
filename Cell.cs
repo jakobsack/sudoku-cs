@@ -24,11 +24,11 @@ namespace Sudoku
 {
     public class Cell
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int Column { get; set; }
+        public int Row { get; set; }
 
         private int number;
-        public int Value
+        public int Number
         {
             get { return number; }
             set
@@ -44,35 +44,35 @@ namespace Sudoku
 
         public List<int> Candidates { get; set; }
 
-        public int QuadX
+        public int QuadColumn
         {
             get
             {
-                return X / 3;
+                return Column / 3;
             }
         }
 
-        public int QuadY
+        public int QuadRow
         {
             get
             {
-                return Y / 3;
+                return Row / 3;
             }
         }
 
         public Cell()
         {
-            X = 0;
-            Y = 0;
-            Value = 0;
+            Column = 0;
+            Row = 0;
+            Number = 0;
             Candidates = new List<int>();
         }
 
         public Cell(Cell cell)
         {
-            X = cell.X;
-            Y = cell.Y;
-            Value = cell.Value;
+            Column = cell.Column;
+            Row = cell.Row;
+            Number = cell.Number;
             Candidates = cell.Candidates.ToList();
         }
     }

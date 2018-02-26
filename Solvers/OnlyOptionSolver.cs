@@ -38,21 +38,14 @@ namespace Sudoku.Solvers
 
             for (int number = 1; number <= 9; number++)
             {
-                if(cells.Exists(x => x.Value == number)) continue;
+                if (cells.Exists(x => x.Number == number)) continue;
 
-                List<Cell> options = new List<Cell>();
-                foreach(Cell cell in cells)
-                {
-                    if (cell.Candidates.Exists(x => x == number))
-                    {
-                        options.Add(cell);
-                    }
-                }
+                List<Cell> options = cells.Where(x => x.Candidates.Contains(number)).ToList();
 
                 if (options.Count != 1) continue;
 
                 Cell singleCell = options.First();
-                singleCell.Value = number;
+                singleCell.Number = number;
                 singles.Add(singleCell);
             }
 

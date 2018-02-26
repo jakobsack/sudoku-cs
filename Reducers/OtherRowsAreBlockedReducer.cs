@@ -51,7 +51,7 @@ namespace Sudoku.Reducers
                     for (int row = 0; row < 3; row++)
                     {
                         // we add the number of all quads where it is possible to insert the number
-                        quadOptions.Add(quadRowCells[row].Where(x => x.Candidates.Exists(y => y == number)).Select(x => x.QuadX).Distinct().ToList());
+                        quadOptions.Add(quadRowCells[row].Where(x => x.Candidates.Exists(y => y == number)).Select(x => x.QuadColumn).Distinct().ToList());
                     }
 
                     // The number exists in all rows
@@ -64,7 +64,7 @@ namespace Sudoku.Reducers
                             for(int row = 0; row < 3; row++){
                                 if(!quadOptions[row].Exists(x => x == quadX)) continue;
 
-                                foreach(Cell cell in quadRowCells[row].Where(x => x.Candidates.Exists(y => y == number) && x.QuadX != quadX)){
+                                foreach(Cell cell in quadRowCells[row].Where(x => x.Candidates.Exists(y => y == number) && x.QuadColumn != quadX)){
                                     changes = true;
                                     cell.Candidates.Remove(number);
                                 }

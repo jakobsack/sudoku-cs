@@ -39,7 +39,7 @@ namespace Sudoku
 
             if(!cells.Any()) return false;
 
-            Field.InsertCells(cells);
+            Field.ReplaceCells(cells);
             return true;
         }
 

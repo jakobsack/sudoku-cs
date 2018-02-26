@@ -34,47 +34,39 @@ namespace Sudoku.Reducers
 
         public List<Cell> FindParallelCandidates(List<Cell> cells)
         {
-            Dictionary<int, List<int>> cellsForNumber = new Dictionary<int, List<int>>();
-            for (int number = 1; number <= 9; number++)
-            {
-                cellsForNumber[number] = new List<int>();
-                for (int i = 0; i < cells.Count; i++)
-                {
-                    if (cells[i].Candidates.Contains(number))
-                    {
-                        cellsForNumber[number].Add(i);
-                    }
-                }
-            }
-
             bool changed = false;
 
             List<int> processedNumbers = new List<int>();
             for (int number = 1; number <= 9; number++)
             {
                 if (processedNumbers.Contains(number)) continue;
-                if (cellsForNumber[number].Count < 2) continue;
 
-                List<int> parallelNumbers = new List<int> { number };
-                for (int otherNumber = number + 1; otherNumber <= 9; otherNumber++)
+                List<Cell> cellsForNumber = cells.Where(x => x.Candidates.Contains(number)).ToList();
+                if (cellsForNumber.Count < 2) continue;
+
+                List<int> parallelNumbers = new List<int>();
+                for (int otherNumber = 1; otherNumber <= 9; otherNumber++)
                 {
                     if (processedNumbers.Contains(otherNumber)) continue;
 
-                    if (AreListsEqual(cellsForNumber[number], cellsForNumber[otherNumber]))
+                    List<Cell> cellsForOtherNumber = cells.Where(x => x.Candidates.Contains(otherNumber)).ToList();
+                    if (AreListsEqual(cellsForNumber, cellsForOtherNumber))
                     {
                         parallelNumbers.Add(otherNumber);
                     }
                 }
 
+                if (parallelNumbers.Count < 2) continue;
+
                 // a) number of options == number of parallels
-                if (parallelNumbers.Count == cellsForNumber[number].Count)
+                if (parallelNumbers.Count == cellsForNumber.Count)
                 {
-                    foreach (int i in cellsForNumber[number])
+                    foreach (Cell cell in cellsForNumber)
                     {
-                        if (cells[i].Candidates.Count > parallelNumbers.Count)
+                        if (cell.Candidates.Count > parallelNumbers.Count)
                         {
                             changed = true;
-                            cells[i].Candidates = parallelNumbers;
+                            cell.Candidates.RemoveAll(x => !parallelNumbers.Contains(x));
                         }
                     }
                     processedNumbers.AddRange(parallelNumbers);
@@ -83,18 +75,15 @@ namespace Sudoku.Reducers
                 }
 
                 // b) we have more cells than parallel numbers, but count(parallels) cells are exclusive
-                List<int> exclusiveParallelCells = cellsForNumber[number].Where(x => cells[x].Candidates.Count == parallelNumbers.Count).ToList();
+                List<Cell> exclusiveParallelCells = cellsForNumber.Where(x => x.Candidates.Count == parallelNumbers.Count).ToList();
                 if (exclusiveParallelCells.Count != parallelNumbers.Count) continue;
 
-                foreach (int cell in cellsForNumber[number])
+                foreach (Cell cell in cellsForNumber)
                 {
-                    if (cells[cell].Candidates.Count > parallelNumbers.Count)
+                    if (cell.Candidates.Count > parallelNumbers.Count)
                     {
                         changed = true;
-                        foreach (int removeNumber in parallelNumbers)
-                        {
-                            cells[cell].Candidates.Remove(removeNumber);
-                        }
+                        cell.Candidates.RemoveAll(x => parallelNumbers.Contains(x));
                     }
                 }
                 processedNumbers.AddRange(parallelNumbers);
@@ -105,13 +94,14 @@ namespace Sudoku.Reducers
             return new List<Cell>();
         }
 
-        private bool AreListsEqual(List<int> left, List<int> right)
+        private bool AreListsEqual(List<Cell> left, List<Cell> right)
         {
             if (left.Count != right.Count) return false;
 
             for (int i = 0; i < left.Count; i++)
             {
-                if (left[i] != right[i]) return false;
+                if (left[i].Column != right[i].Column) return false;
+                if (left[i].Row != right[i].Row) return false;
             }
 
             return true;
