@@ -60,6 +60,14 @@ namespace Sudoku
             }
         }
 
+        public (int, int) Quad
+        {
+            get
+            {
+                return (QuadColumn, QuadRow);
+            }
+        }
+
         public Cell()
         {
             Column = 0;

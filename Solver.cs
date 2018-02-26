@@ -26,20 +26,26 @@ namespace Sudoku
 {
     public abstract class Solver
     {
-        internal Board Field;
+        protected Board Field;
 
-        public Solver(Board field)
+        public Solver(Board board)
         {
-            Field = field;
+            Field = board;
         }
 
         public bool Run()
         {
             List<Cell> cells = Find();
 
-            if(!cells.Any()) return false;
+            if (!cells.Any()) return false;
+
+            // Check if board would be valid.
+            Board copy = new Board(Field);
+            copy.ReplaceCells(cells);
+            if (!copy.Validate()) return false;
 
             Field.ReplaceCells(cells);
+
             return true;
         }
 

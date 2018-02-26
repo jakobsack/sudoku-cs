@@ -40,7 +40,7 @@ namespace Sudoku
             Field = new Board();
             Iterations = 0;
             InitialUnknown = 0;
-            MaxBacktrackLevel = 4;
+            MaxBacktrackLevel = 2;
             AssumedCells = new List<Cell>();
         }
 
@@ -75,6 +75,19 @@ namespace Sudoku
 
         private bool SolveHelper(Board board)
         {
+            // Create Reducers
+            OtherRowsAreBlockedReducer otherRowsAreBlockedReducer = new OtherRowsAreBlockedReducer(board);
+            OtherColumnsAreBlockedReducer otherColumnsAreBlockedReducer = new OtherColumnsAreBlockedReducer(board);
+            EqualOptionsInRowReducer equalOptionsInRowReducer = new EqualOptionsInRowReducer(board);
+            EqualOptionsInColumnReducer equalOptionsInColumnReducer = new EqualOptionsInColumnReducer(board);
+            EqualOptionsInQuadReducer equalOptionsInQuadReducer = new EqualOptionsInQuadReducer(board);
+
+            // Create Solvers
+            OnlyCandidateInCellSolver onlyCandidateInCellSolver = new OnlyCandidateInCellSolver(board);
+            OnlyOptionInRowSolver onlyOptionInRowSolver = new OnlyOptionInRowSolver(board);
+            OnlyOptionInColumnSolver onlyOptionInColumnSolver = new OnlyOptionInColumnSolver(board);
+            OnlyOptionInQuadSolver onlyOptionInQuadSolver = new OnlyOptionInQuadSolver(board);
+
             while (true)
             {
                 Iterations++;
@@ -82,17 +95,17 @@ namespace Sudoku
                 bool repeatLoop = false;
 
                 // Limit insertion candidates
-                //repeatLoop = repeatLoop || new OtherRowsAreBlocked(board).Run();
-                //repeatLoop = repeatLoop || new OtherColumnsAreBlocked(board).Run();
-                repeatLoop = repeatLoop || new EqualOptionsInRowReducer(board).Run();
-                repeatLoop = repeatLoop || new EqualOptionsInColumnReducer(board).Run();
-                repeatLoop = repeatLoop || new EqualOptionsInQuadReducer(board).Run();
+                repeatLoop = repeatLoop || otherRowsAreBlockedReducer.Run();
+                repeatLoop = repeatLoop || otherColumnsAreBlockedReducer.Run();
+                repeatLoop = repeatLoop || equalOptionsInRowReducer.Run();
+                repeatLoop = repeatLoop || equalOptionsInColumnReducer.Run();
+                repeatLoop = repeatLoop || equalOptionsInQuadReducer.Run();
 
                 // Fill cells
-                repeatLoop = repeatLoop || new OnlyCandidateInCellSolver(board).Run();
-                repeatLoop = repeatLoop || new OnlyOptionInRowSolver(board).Run();
-                repeatLoop = repeatLoop || new OnlyOptionInColumnSolver(board).Run();
-                repeatLoop = repeatLoop || new OnlyOptionInQuadSolver(board).Run();
+                repeatLoop = repeatLoop || onlyCandidateInCellSolver.Run();
+                repeatLoop = repeatLoop || onlyOptionInRowSolver.Run();
+                repeatLoop = repeatLoop || onlyOptionInColumnSolver.Run();
+                repeatLoop = repeatLoop || onlyOptionInQuadSolver.Run();
 
                 if (repeatLoop) continue;
 
@@ -134,14 +147,23 @@ namespace Sudoku
             Console.WriteLine("Result:");
             PrintField();
 
-            Console.WriteLine(String.Format("Board is valid: {0}", Field.Validate() ? "yes" : "no"));
-            Console.WriteLine(String.Format("Iterations: {0}", Iterations));
-            Console.WriteLine(String.Format("Determined {0} out of {1} unknowns", InitialUnknown - Field.UnknownValues(), InitialUnknown));
+            bool isValid = Field.Validate();
+
+            Console.WriteLine("Board is valid: {0}", isValid ? "yes" : "no");
+            Console.WriteLine("Iterations: {0}", Iterations);
+            Console.WriteLine("Determined {0} out of {1} unknowns", InitialUnknown - Field.UnknownValues(), InitialUnknown);
             Console.WriteLine();
-            Console.WriteLine("{0} cells had to be guessed{1}", AssumedCells.Count, AssumedCells.Count == 0 ? "" : ":");
-            foreach (Cell cell in AssumedCells)
+            if (isValid)
             {
-                Console.WriteLine("Number {0} at column {1}, row {2}", cell.Number, cell.Column, cell.Row);
+                Console.WriteLine("{0} cells had to be guessed{1}", AssumedCells.Count, AssumedCells.Count == 0 ? "" : ":");
+                foreach (Cell cell in AssumedCells)
+                {
+                    Console.WriteLine("Number {0} at column {1}, row {2}", cell.Number, cell.Column, cell.Row);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Guessed up to {0} cells, but this did not work out.", MaxBacktrackLevel);
             }
         }
 

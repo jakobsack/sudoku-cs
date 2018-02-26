@@ -25,9 +25,9 @@ using Sudoku;
 
 namespace Sudoku.Reducers
 {
-    public class OtherColumnsAreBlocked : Reducer
+    public class OtherColumnsAreBlockedReducer : OthersAreBlockedReducer
     {
-        public OtherColumnsAreBlocked(Board field) : base(field)
+        public OtherColumnsAreBlockedReducer(Board field) : base(field)
         {
 
         }
@@ -43,42 +43,7 @@ namespace Sudoku.Reducers
                 {
                     quadColumnCells.Add(Field.Column(quadX * 3 + row));
                 }
-
-                bool changes = false;
-                for (int number = 1; number <= 9; number++)
-                {
-                    List<List<int>> quadOptions = new List<List<int>>();
-                    for (int column = 0; column < 3; column++)
-                    {
-                        // we add the number of all quads where it is possible to insert the number
-                        quadOptions.Add(quadColumnCells[column].Where(x => x.Candidates.Exists(y => y == number)).Select(x => x.QuadRow).Distinct().ToList());
-                    }
-
-                    // The number exists in all rows
-                    if (!quadOptions.Any(x => x.Any())) continue;
-
-                    // Here we know in which quads the number fits
-                    for (int quadY = 0; quadY < 3; quadY++)
-                    {
-                        if(quadOptions.Where(x => x.Exists(y => y == quadY)).Count() == 1){
-                            for(int row = 0; row < 3; row++){
-                                if(!quadOptions[row].Exists(x => x == quadY)) continue;
-
-                                foreach(Cell cell in quadColumnCells[row].Where(x => x.Candidates.Exists(y => y == number) && x.QuadRow != quadY)){
-                                    changes = true;
-                                    cell.Candidates.Remove(number);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (!changes) continue;
-
-                for (int row = 0; row < 3; row++)
-                {
-                    cells.AddRange(quadColumnCells[row]);
-                }
+                cells.AddRange(FindOtherwiseBlockedCells(quadColumnCells));
             }
 
             return cells;

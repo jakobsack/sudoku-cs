@@ -54,12 +54,7 @@ namespace Sudoku
         public Board(Board board)
         {
             BacktrackLevel = board.BacktrackLevel + 1;
-
-            Cells = new List<Cell>();
-            foreach (Cell cell in board.Cells)
-            {
-                Cells.Add(new Cell(cell));
-            }
+            Cells = board.Cells.Select(x => new Cell(x)).ToList();
         }
 
         public List<Cell> AllCells()
@@ -195,7 +190,9 @@ namespace Sudoku
             for (int number = 1; number <= cells.Count; number++)
             {
                 if (cells.Where(x => x.Number == number).Count() > 1) return false;
+                if (cells.Where(x => x.Number == number).Any() && cells.Where(x => x.Candidates.Contains(number)).Any()) return false;
             }
+
             return true;
         }
 
@@ -205,23 +202,14 @@ namespace Sudoku
         /// <param name="changedCell">Cell with the updated values</param>
         private void UpdateCandidates(Cell changedCell)
         {
-            List<Cell> cellsToCheck = new List<Cell>();
-            for (int row = 0; row < 9; row++)
+            foreach (Cell cell in Cells)
             {
-                for (int column = 0; column < 9; column++)
+                if (cell.Column == changedCell.Column ||
+                    cell.Row == changedCell.Row ||
+                    (cell.QuadColumn == changedCell.QuadColumn && cell.QuadRow == changedCell.QuadRow))
                 {
-                    if (column == changedCell.Column ||
-                        row == changedCell.Row ||
-                        (column / 3 == changedCell.QuadColumn && row / 3 == changedCell.QuadRow))
-                    {
-                        cellsToCheck.Add(Cells[CellPosition(column, row)]);
-                    }
+                    cell.Candidates.Remove(changedCell.Number);
                 }
-            }
-
-            foreach (Cell cell in cellsToCheck)
-            {
-                cell.Candidates.Remove(changedCell.Number);
             }
         }
 

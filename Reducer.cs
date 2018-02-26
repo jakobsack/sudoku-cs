@@ -26,21 +26,20 @@ namespace Sudoku
 {
     public abstract class Reducer
     {
-        internal Board Field;
+        protected Board Field;
 
-        public Reducer(Board field)
+        public Reducer(Board board)
         {
-            Field = field;
+            Field = board;
         }
 
         public bool Run()
         {
             List<Cell> cells = Find();
 
-            if(!cells.Any()) return false;
-
             Field.ReplaceCells(cells);
-            return true;
+
+            return cells.Any();
         }
 
         public abstract List<Cell> Find();
