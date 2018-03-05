@@ -1,4 +1,7 @@
 #!/bin/bash
+cd ..
+dotnet build
+cd tools
 dotnet minicover instrument --workdir ../ --assemblies Sudoku.Xunit/bin/**/*.dll --sources Sudoku/**/*.cs
 dotnet minicover reset
 cd ../Sudoku.Xunit

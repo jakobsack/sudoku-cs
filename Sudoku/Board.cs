@@ -40,11 +40,7 @@ namespace Sudoku
             {
                 for (int col = 0; col < 9; col++)
                 {
-                    Cells.Add(new Cell(col, row)
-                    {
-                        Number = 0,
-                        Candidates = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
-                    });
+                    Cells.Add(new Cell(col, row));
                 }
             }
         }
