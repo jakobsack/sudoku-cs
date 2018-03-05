@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2018 Jakob Sack <mail@jakobsack.de>
+// Copyright (C) 2018 Jakob Sack <mail@jakobsack.de>
 //
 // This file is part of Sudoku.
 //

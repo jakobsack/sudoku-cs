@@ -1,5 +1,6 @@
 {
     "licenser.license": "GPLv3",
     "licenser.author": "Jakob Sack <mail@jakobsack.de>",
-    "licenser.projectName": "Sudoku"
+    "licenser.projectName": "Sudoku",
+    "files.eol": "\n"
 }
