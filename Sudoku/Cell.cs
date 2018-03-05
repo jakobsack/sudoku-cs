@@ -24,8 +24,8 @@ namespace Sudoku
 {
     public class Cell
     {
-        public int Column { get; set; }
-        public int Row { get; set; }
+        public int Column { get; }
+        public int Row { get; }
 
         private int number;
         public int Number
@@ -68,10 +68,10 @@ namespace Sudoku
             }
         }
 
-        public Cell()
+        public Cell(int column, int row)
         {
-            Column = 0;
-            Row = 0;
+            Column = column;
+            Row = row;
             Number = 0;
             Candidates = new List<int>();
         }
