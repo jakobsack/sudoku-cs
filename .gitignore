@@ -2,3 +2,7 @@
 bin
 obj
 
+# coverage
+coverage-html
+coverage.json
+coverage-hits.txt
