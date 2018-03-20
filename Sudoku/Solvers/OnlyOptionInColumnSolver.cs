@@ -14,22 +14,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-using Sudoku;
 
 namespace Sudoku.Solvers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class OnlyOptionInColumnSolver : OnlyOptionSolver
     {
-        public OnlyOptionInColumnSolver(Board field) : base(field)
+        public OnlyOptionInColumnSolver(Board field)
+            : base(field)
         {
-
         }
 
         public override List<Cell> Find()
@@ -40,6 +38,7 @@ namespace Sudoku.Solvers
             {
                 cells.AddRange(FindSingles(Field.Column(column)));
             }
+
             return cells;
         }
     }

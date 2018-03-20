@@ -14,24 +14,23 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Sudoku
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public abstract class Reducer
     {
-        protected Board Field;
-
         public Reducer(Board board)
         {
             Field = board;
         }
+
+        protected Board Field { get; set; }
 
         public bool Run()
         {

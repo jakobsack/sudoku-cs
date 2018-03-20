@@ -14,35 +14,39 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-using Sudoku;
 
 namespace Sudoku.Solvers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public abstract class OnlyOptionSolver : Solver
     {
-        public OnlyOptionSolver(Board field) : base(field)
+        public OnlyOptionSolver(Board field)
+            : base(field)
         {
-
         }
 
-        public List<Cell> FindSingles(List<Cell> cells)
+        public static List<Cell> FindSingles(List<Cell> cells)
         {
             List<Cell> singles = new List<Cell>();
 
             for (int number = 1; number <= 9; number++)
             {
-                if (cells.Exists(x => x.Number == number)) continue;
+                if (cells.Exists(x => x.Number == number))
+                {
+                    continue;
+                }
 
                 List<Cell> options = cells.Where(x => x.Candidates.Contains(number)).ToList();
 
-                if (options.Count != 1) continue;
+                if (options.Count != 1)
+                {
+                    continue;
+                }
 
                 Cell singleCell = options.First();
                 singleCell.Number = number;

@@ -14,25 +14,23 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-using Sudoku;
 
 namespace Sudoku.Reducers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public abstract class OthersAreBlockedReducer : Reducer
     {
-        public OthersAreBlockedReducer(Board field) : base(field)
+        public OthersAreBlockedReducer(Board field)
+            : base(field)
         {
-
         }
 
-        public List<Cell> FindOtherwiseBlockedCells(List<List<Cell>> cellLists)
+        public static List<Cell> FindOtherwiseBlockedCells(List<List<Cell>> cellLists)
         {
             bool changes = false;
             List<(int, int)> availableQuads = cellLists[0].Select(x => x.Quad).Distinct().ToList();
@@ -47,11 +45,17 @@ namespace Sudoku.Reducers
                 }
 
                 // The number exists in all rows
-                if (!quadOptions.Any(x => x.Any())) continue;
+                if (!quadOptions.Any(x => x.Any()))
+                {
+                    continue;
+                }
 
                 foreach ((int, int) quad in availableQuads)
                 {
-                    if (quadOptions.Where(x => x.Contains(quad)).Count() != 1) continue;
+                    if (quadOptions.Where(x => x.Contains(quad)).Count() != 1)
+                    {
+                        continue;
+                    }
 
                     // only one quad has this number!
                     for (int lane = 0; lane < 3; lane++)
@@ -78,13 +82,17 @@ namespace Sudoku.Reducers
                 }
             }
 
-            if (!changes) return new List<Cell>();
+            if (!changes)
+            {
+                return new List<Cell>();
+            }
 
             List<Cell> cells = new List<Cell>();
             for (int row = 0; row < 3; row++)
             {
                 cells.AddRange(cellLists[row]);
             }
+
             return cells;
         }
     }

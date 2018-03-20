@@ -14,35 +14,40 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Sudoku
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public abstract class Solver
     {
-        protected Board Field;
-
         public Solver(Board board)
         {
             Field = board;
         }
 
+        protected Board Field { get; set; }
+
         public bool Run()
         {
             List<Cell> cells = Find();
 
-            if (!cells.Any()) return false;
+            if (!cells.Any())
+            {
+                return false;
+            }
 
             // Check if board would be valid.
             Board copy = new Board(Field);
             copy.ReplaceCells(cells);
-            if (!copy.Validate()) return false;
+            if (!copy.Validate())
+            {
+                return false;
+            }
 
             Field.ReplaceCells(cells);
 

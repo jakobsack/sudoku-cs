@@ -1,14 +1,15 @@
-using System;
-using Sudoku;
-using Sudoku.Solvers;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Sudoku.Xunit.Solvers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using global::Sudoku.Solvers;
+    using global::Xunit;
+
     public class OnlyOptionSolverMock : OnlyOptionSolver
     {
-        public OnlyOptionSolverMock(Board field) : base(field)
+        public OnlyOptionSolverMock(Board field)
+            : base(field)
         {
         }
 

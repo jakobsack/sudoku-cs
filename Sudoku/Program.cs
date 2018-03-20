@@ -14,20 +14,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
 
 namespace Sudoku
 {
-    class Program
+    using System;
+
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            Sudoku sudoku = new Sudoku();
-            sudoku.Input();
-            sudoku.Solve();
-            sudoku.Output();
+            Engine engine = new Engine();
+            engine.Input();
+            engine.Solve();
+            engine.Output();
         }
     }
 }

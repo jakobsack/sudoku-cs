@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku", "Sudoku\Sudoku.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Xunit", "Sudoku.Xunit\Sudoku.Xunit.csproj", "{B5A85B8B-A8D9-4FE2-AB0F-09C3604B32B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tools", "tools\tools.csproj", "{6F51D541-A0E2-4F00-822A-D27D41A86D5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tools", "Tools\Tools.csproj", "{6F51D541-A0E2-4F00-822A-D27D41A86D5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

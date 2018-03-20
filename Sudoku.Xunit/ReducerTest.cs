@@ -1,12 +1,10 @@
-using System;
-using Xunit;
-using Sudoku;
-using Sudoku.Solvers;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Sudoku.Xunit
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using global::Xunit;
+
     public class ReducerTest
     {
         [Fact]
@@ -30,7 +28,7 @@ namespace Sudoku.Xunit
         public void FindWithResultTest()
         {
             Board board = new Board();
-            ReducerMock solver = new ReducerMock(board, new List<Cell> { new Cell(5, 6) { Candidates = new List<int> { 6 } } });
+            ReducerMock solver = new ReducerMock(board, new List<Cell> { new Cell(5, 6, new List<int> { 6 }) });
             bool result = solver.Run();
 
             Assert.True(result);

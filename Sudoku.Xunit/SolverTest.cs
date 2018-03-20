@@ -1,12 +1,11 @@
-using System;
-using Xunit;
-using Sudoku;
-using Sudoku.Solvers;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Sudoku.Xunit
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using global::Sudoku.Solvers;
+    using global::Xunit;
+
     public class SolverTest
     {
         [Fact]

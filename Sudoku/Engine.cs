@@ -14,42 +14,42 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-using Sudoku.Solvers;
-using Sudoku.Reducers;
 
 namespace Sudoku
 {
-    public class Sudoku
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Reducers;
+    using Solvers;
+
+    public class Engine
     {
-        private Board Field;
-        private int Iterations;
-        private int InitialUnknown;
-        private int MaxBacktrackLevel;
+        private int iterations;
+        private int initialUnknown;
+        private int maxBacktrackLevel;
 
-        private List<Cell> AssumedCells;
+        private List<Cell> assumedCells;
 
-        public Sudoku()
+        public Engine()
         {
             Field = new Board();
-            Iterations = 0;
-            InitialUnknown = 0;
-            MaxBacktrackLevel = 2;
-            AssumedCells = new List<Cell>();
+            iterations = 0;
+            initialUnknown = 0;
+            maxBacktrackLevel = 2;
+            assumedCells = new List<Cell>();
         }
+
+        private Board Field { get; set; }
 
         public void Input()
         {
             IEnumerable<string> lines = System.IO.File.ReadAllLines("example.txt");
             for (int row = 0; row < 9; row++)
             {
-                string line = lines.ElementAt(row); //Console.ReadLine();
+                string line = lines.ElementAt(row); // Console.ReadLine();
                 IEnumerable<string> cells = line.Split(' ');
 
                 for (int column = 0; column < 9; column++)
@@ -61,7 +61,7 @@ namespace Sudoku
                 }
             }
 
-            InitialUnknown = Field.UnknownValues();
+            initialUnknown = Field.UnknownValues();
 
             Console.WriteLine("Input:");
             PrintField();
@@ -70,7 +70,32 @@ namespace Sudoku
         public void Solve()
         {
             SolveHelper(Field);
-            AssumedCells.Reverse();
+            assumedCells.Reverse();
+        }
+
+        public void Output()
+        {
+            Console.WriteLine("Result:");
+            PrintField();
+
+            bool isValid = Field.Validate();
+
+            Console.WriteLine("Board is valid: {0}", isValid ? "yes" : "no");
+            Console.WriteLine("Iterations: {0}", iterations);
+            Console.WriteLine("Determined {0} out of {1} unknowns", initialUnknown - Field.UnknownValues(), initialUnknown);
+            Console.WriteLine();
+            if (isValid)
+            {
+                Console.WriteLine("{0} cells had to be guessed{1}", assumedCells.Count, assumedCells.Count == 0 ? String.Empty : ":");
+                foreach (Cell cell in assumedCells)
+                {
+                    Console.WriteLine("Number {0} at column {1}, row {2}", cell.Number, cell.Column, cell.Row);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Guessed up to {0} cells, but this did not work out.", maxBacktrackLevel);
+            }
         }
 
         private bool SolveHelper(Board board)
@@ -90,7 +115,7 @@ namespace Sudoku
 
             while (true)
             {
-                Iterations++;
+                iterations++;
 
                 bool repeatLoop = false;
 
@@ -107,13 +132,16 @@ namespace Sudoku
                 repeatLoop = repeatLoop || onlyOptionInColumnSolver.Run();
                 repeatLoop = repeatLoop || onlyOptionInQuadSolver.Run();
 
-                if (repeatLoop) continue;
+                if (repeatLoop)
+                {
+                    continue;
+                }
 
                 if (board.UnknownValues() == 0)
                 {
                     return true;
                 }
-                else if (board.BacktrackLevel < MaxBacktrackLevel)
+                else if (board.BacktrackLevel < maxBacktrackLevel)
                 {
                     foreach (Cell cell in board.AllCells())
                     {
@@ -126,12 +154,13 @@ namespace Sudoku
 
                             if (SolveHelper(newBoard))
                             {
-                                AssumedCells.Add(assumedCell);
+                                assumedCells.Add(assumedCell);
 
                                 foreach (Cell solvedCell in newBoard.AllCells())
                                 {
                                     board.ReplaceCell(solvedCell);
                                 }
+
                                 return true;
                             }
                         }
@@ -139,31 +168,6 @@ namespace Sudoku
                 }
 
                 return false;
-            }
-        }
-
-        public void Output()
-        {
-            Console.WriteLine("Result:");
-            PrintField();
-
-            bool isValid = Field.Validate();
-
-            Console.WriteLine("Board is valid: {0}", isValid ? "yes" : "no");
-            Console.WriteLine("Iterations: {0}", Iterations);
-            Console.WriteLine("Determined {0} out of {1} unknowns", InitialUnknown - Field.UnknownValues(), InitialUnknown);
-            Console.WriteLine();
-            if (isValid)
-            {
-                Console.WriteLine("{0} cells had to be guessed{1}", AssumedCells.Count, AssumedCells.Count == 0 ? "" : ":");
-                foreach (Cell cell in AssumedCells)
-                {
-                    Console.WriteLine("Number {0} at column {1}, row {2}", cell.Number, cell.Column, cell.Row);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Guessed up to {0} cells, but this did not work out.", MaxBacktrackLevel);
             }
         }
 
@@ -183,6 +187,7 @@ namespace Sudoku
                         Console.Write(' ');
                     }
                 }
+
                 Console.Write(Environment.NewLine);
 
                 if (row % 3 == 2)

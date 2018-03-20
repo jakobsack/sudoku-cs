@@ -1,11 +1,10 @@
-using System;
-using Xunit;
-using Sudoku;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Sudoku.Xunit
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using global::Xunit;
+
     public class CellTest
     {
         [Theory]
@@ -48,7 +47,7 @@ namespace Sudoku.Xunit
         {
             Cell testCell = new Cell(4, 5)
             {
-                Number = 5
+                Number = 5,
             };
             Cell clonedCell = new Cell(testCell);
 

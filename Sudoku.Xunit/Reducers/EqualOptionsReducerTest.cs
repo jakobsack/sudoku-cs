@@ -1,16 +1,15 @@
-using System;
-using Xunit;
-using Sudoku;
-using Sudoku.Reducers;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Sudoku.Xunit.Reducers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using global::Sudoku.Reducers;
+    using global::Xunit;
+
     public class EqualOptionsReducerTest
     {
         [Fact]
-        public void ConstructorTest()
+        public static void ConstructorTest()
         {
             Board board = new Board();
             EqualOptionsReducerMock solver = new EqualOptionsReducerMock(board);
@@ -19,17 +18,15 @@ namespace Sudoku.Xunit.Reducers
         [Fact]
         public void FindParallelCandidatesWithExclusiveParallelsTest()
         {
-            List<Cell> cells = new List<Cell>{
-                new Cell(0, 0) { Candidates = new List<int> { 1, 2, 3 }},
-                new Cell(1, 0) { Candidates = new List<int> { 1, 2 }},
-                new Cell(2, 0) { Candidates = new List<int> { 1, 2 }},
-                new Cell(3, 0) { Candidates = new List<int> { 3, 4 }}
+            List<Cell> cells = new List<Cell>
+            {
+                new Cell(0, 0, new List<int> { 1, 2, 3 }),
+                new Cell(1, 0, new List<int> { 1, 2 }),
+                new Cell(2, 0, new List<int> { 1, 2 }),
+                new Cell(3, 0, new List<int> { 3, 4 }),
             };
 
-            Board board = new Board();
-            EqualOptionsReducerMock solver = new EqualOptionsReducerMock(board);
-
-            List<Cell> result = solver.FindParallelCandidates(cells);
+            List<Cell> result = EqualOptionsReducerMock.FindParallelCandidates(cells);
             Assert.Equal(4, result.Count());
             Assert.Equal(new List<int> { 3 }, result[0].Candidates);
             Assert.Equal(new List<int> { 1, 2 }, result[1].Candidates);
@@ -40,17 +37,15 @@ namespace Sudoku.Xunit.Reducers
         [Fact]
         public void FindParallelCandidatesWithExactParallelsTest()
         {
-            List<Cell> cells = new List<Cell>{
-                new Cell(0, 0) { Candidates = new List<int> { 3 }},
-                new Cell(1, 0) { Candidates = new List<int> { 1, 2, 5, 6 }},
-                new Cell(2, 0) { Candidates = new List<int> { 1, 2, 7, 8 }},
-                new Cell(3, 0) { Candidates = new List<int> { 3, 4 }}
+            List<Cell> cells = new List<Cell>
+            {
+                new Cell(0, 0, new List<int> { 3 }),
+                new Cell(1, 0, new List<int> { 1, 2, 5, 6 }),
+                new Cell(2, 0, new List<int> { 1, 2, 7, 8 }),
+                new Cell(3, 0, new List<int> { 3, 4 }),
             };
 
-            Board board = new Board();
-            EqualOptionsReducerMock solver = new EqualOptionsReducerMock(board);
-
-            List<Cell> result = solver.FindParallelCandidates(cells);
+            List<Cell> result = EqualOptionsReducerMock.FindParallelCandidates(cells);
             Assert.Equal(4, result.Count());
             Assert.Equal(new List<int> { 3 }, result[0].Candidates);
             Assert.Equal(new List<int> { 1, 2 }, result[1].Candidates);
@@ -61,17 +56,15 @@ namespace Sudoku.Xunit.Reducers
         [Fact]
         public void FindParallelCandidatesWithNoParallelsTest()
         {
-            List<Cell> cells = new List<Cell>{
-                new Cell(0, 0) { Candidates = new List<int> { 1 }},
-                new Cell(1, 0) { Candidates = new List<int> { 2 }},
-                new Cell(2, 0) { Candidates = new List<int> { 3 }},
-                new Cell(3, 0) { Candidates = new List<int> { 4 }}
+            List<Cell> cells = new List<Cell>
+            {
+                new Cell(0, 0, new List<int> { 1 }),
+                new Cell(1, 0, new List<int> { 2 }),
+                new Cell(2, 0, new List<int> { 3 }),
+                new Cell(3, 0, new List<int> { 4 }),
             };
 
-            Board board = new Board();
-            EqualOptionsReducerMock solver = new EqualOptionsReducerMock(board);
-
-            List<Cell> result = solver.FindParallelCandidates(cells);
+            List<Cell> result = EqualOptionsReducerMock.FindParallelCandidates(cells);
             Assert.Empty(result);
         }
     }

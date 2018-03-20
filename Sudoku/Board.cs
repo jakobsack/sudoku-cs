@@ -14,33 +14,30 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Sudoku
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// This class contains the board with all its cells.
     /// </summary>
     public class Board
     {
-        private List<Cell> Cells;
-
-        public int BacktrackLevel { private set; get; }
+        private List<Cell> cells;
 
         public Board()
         {
             BacktrackLevel = 0;
 
-            Cells = new List<Cell>();
+            cells = new List<Cell>();
             for (int row = 0; row < 9; row++)
             {
                 for (int col = 0; col < 9; col++)
                 {
-                    Cells.Add(new Cell(col, row));
+                    cells.Add(new Cell(col, row));
                 }
             }
         }
@@ -48,12 +45,14 @@ namespace Sudoku
         public Board(Board board)
         {
             BacktrackLevel = board.BacktrackLevel + 1;
-            Cells = board.Cells.Select(x => new Cell(x)).ToList();
+            cells = board.cells.Select(x => new Cell(x)).ToList();
         }
+
+        public int BacktrackLevel { get; private set; }
 
         public List<Cell> AllCells()
         {
-            return Cells.Select(x => new Cell(x)).ToList();
+            return cells.Select(x => new Cell(x)).ToList();
         }
 
         public List<Cell> Row(int row)
@@ -101,7 +100,7 @@ namespace Sudoku
         /// <returns>Number of cells with unknown number</returns>
         public int UnknownValues()
         {
-            return Cells.Where(x => x.Number == 0).Count();
+            return cells.Where(x => x.Number == 0).Count();
         }
 
         /// <summary>
@@ -112,7 +111,7 @@ namespace Sudoku
         /// <returns>A clone of the cell</returns>
         public Cell GetCell(int column, int row)
         {
-            return new Cell(Cells[CellPosition(column, row)]);
+            return new Cell(cells[CellPosition(column, row)]);
         }
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace Sudoku
 
             // Because we update the candidates on the fly it is possible that we get old candidates
             cell.Candidates.RemoveAll(x => !oldCell.Candidates.Contains(x));
-            Cells[CellPosition(cell.Column, cell.Row)] = cell;
+            cells[CellPosition(cell.Column, cell.Row)] = cell;
 
             if (oldCell.Number != cell.Number)
             {
@@ -164,47 +163,47 @@ namespace Sudoku
         {
             for (int i = 0; i < 9; i++)
             {
-                if (!ValidateCells(Row(i))) return false;
-                if (!ValidateCells(Column(i))) return false;
+                if (!ValidateCells(Row(i)))
+                {
+                    return false;
+                }
+
+                if (!ValidateCells(Column(i)))
+                {
+                    return false;
+                }
             }
 
             for (int quadY = 0; quadY < 3; quadY++)
             {
                 for (int quadX = 0; quadX < 3; quadX++)
                 {
-                    if (!ValidateCells(Quad(quadX, quadY))) return false;
+                    if (!ValidateCells(Quad(quadX, quadY)))
+                    {
+                        return false;
+                    }
                 }
             }
 
             return true;
         }
 
-        private bool ValidateCells(List<Cell> cells)
+        private static bool ValidateCells(List<Cell> cells)
         {
             for (int number = 1; number <= cells.Count; number++)
             {
-                if (cells.Where(x => x.Number == number).Count() > 1) return false;
-                if (cells.Where(x => x.Number == number).Any() && cells.Where(x => x.Candidates.Contains(number)).Any()) return false;
+                if (cells.Where(x => x.Number == number).Count() > 1)
+                {
+                    return false;
+                }
+
+                if (cells.Where(x => x.Number == number).Any() && cells.Where(x => x.Candidates.Contains(number)).Any())
+                {
+                    return false;
+                }
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Removes the number of the changed cell from the list of candidates in all affected cells.
-        /// </summary>
-        /// <param name="changedCell">Cell with the updated values</param>
-        private void UpdateCandidates(Cell changedCell)
-        {
-            foreach (Cell cell in Cells)
-            {
-                if (cell.Column == changedCell.Column ||
-                    cell.Row == changedCell.Row ||
-                    (cell.QuadColumn == changedCell.QuadColumn && cell.QuadRow == changedCell.QuadRow))
-                {
-                    cell.Candidates.Remove(changedCell.Number);
-                }
-            }
         }
 
         /// <summary>
@@ -213,9 +212,26 @@ namespace Sudoku
         /// <param name="column">Column in the grid</param>
         /// <param name="row">Row on the grid</param>
         /// <returns>Int</returns>
-        private int CellPosition(int column, int row)
+        private static int CellPosition(int column, int row)
         {
             return row * 9 + column;
+        }
+
+        /// <summary>
+        /// Removes the number of the changed cell from the list of candidates in all affected cells.
+        /// </summary>
+        /// <param name="changedCell">Cell with the updated values</param>
+        private void UpdateCandidates(Cell changedCell)
+        {
+            foreach (Cell cell in cells)
+            {
+                if (cell.Column == changedCell.Column ||
+                    cell.Row == changedCell.Row ||
+                    (cell.QuadColumn == changedCell.QuadColumn && cell.QuadRow == changedCell.QuadRow))
+                {
+                    cell.Candidates.Remove(changedCell.Number);
+                }
+            }
         }
     }
 }

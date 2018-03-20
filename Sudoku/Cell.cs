@@ -14,23 +14,40 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Sudoku.  If not, see <http://www.gnu.org/licenses/>.
-//
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Sudoku
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class Cell
     {
-        public int Column { get; }
-        public int Row { get; }
-
         private int number;
+
+        public Cell(int column, int row, List<int> candidates = null)
+        {
+            Column = column;
+            Row = row;
+            Number = 0;
+            Candidates = candidates ?? new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        }
+
+        public Cell(Cell cell)
+        {
+            Column = cell.Column;
+            Row = cell.Row;
+            Number = cell.Number;
+            Candidates = cell.Candidates.ToList();
+        }
+
         public int Number
         {
-            get { return number; }
+            get
+            {
+                return number;
+            }
+
             set
             {
                 number = value;
@@ -42,7 +59,11 @@ namespace Sudoku
             }
         }
 
-        public List<int> Candidates { get; set; }
+        public int Column { get; }
+
+        public int Row { get; }
+
+        public List<int> Candidates { get; private set; }
 
         public int QuadColumn
         {
@@ -66,22 +87,6 @@ namespace Sudoku
             {
                 return (QuadColumn, QuadRow);
             }
-        }
-
-        public Cell(int column, int row)
-        {
-            Column = column;
-            Row = row;
-            Number = 0;
-            Candidates = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        }
-
-        public Cell(Cell cell)
-        {
-            Column = cell.Column;
-            Row = cell.Row;
-            Number = cell.Number;
-            Candidates = cell.Candidates.ToList();
         }
     }
 }
