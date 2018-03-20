@@ -1,14 +1,13 @@
-namespace Sudoku.Xunit.Solvers
+namespace Sudoku.Test.Reducers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::Sudoku.Solvers;
-    using global::Xunit;
+    using Sudoku.Reducers;
 
-    public class OnlyOptionSolverMock : OnlyOptionSolver
+    public class EqualOptionsReducerMock : EqualOptionsReducer
     {
-        public OnlyOptionSolverMock(Board field)
+        public EqualOptionsReducerMock(Board field)
             : base(field)
         {
         }

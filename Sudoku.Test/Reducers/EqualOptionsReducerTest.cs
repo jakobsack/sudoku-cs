@@ -1,10 +1,10 @@
-namespace Sudoku.Xunit.Reducers
+namespace Sudoku.Test.Reducers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::Sudoku.Reducers;
-    using global::Xunit;
+    using Sudoku.Reducers;
+    using Xunit;
 
     public class EqualOptionsReducerTest
     {

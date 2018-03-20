@@ -1,10 +1,10 @@
-namespace Sudoku.Xunit
+namespace Sudoku.Test
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::Xunit;
-    using Reducers;
+    using Sudoku.Reducers;
+    using Xunit;
 
     public class ReducerMock : Reducer
     {

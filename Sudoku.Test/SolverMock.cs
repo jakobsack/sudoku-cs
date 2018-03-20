@@ -1,10 +1,10 @@
-namespace Sudoku.Xunit
+namespace Sudoku.Test
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using global::Sudoku.Solvers;
-    using global::Xunit;
+    using Sudoku.Solvers;
+    using Xunit;
 
     public class SolverMock : Solver
     {
