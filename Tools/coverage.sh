@@ -1,12 +1,12 @@
 #!/bin/bash
 cd ..
 dotnet build
-cd tools
-dotnet minicover instrument --workdir ../ --assemblies Sudoku.Xunit/bin/**/*.dll --sources Sudoku/**/*.cs
+cd Tools
+dotnet minicover instrument --workdir ../ --assemblies Sudoku.Test/bin/**/*.dll --sources Sudoku/**/*.cs
 dotnet minicover reset
-cd ../Sudoku.Xunit
+cd ../Sudoku.Test
 dotnet test --no-build
-cd ../tools
+cd ../Tools
 dotnet minicover uninstrument --workdir ../
 dotnet minicover htmlreport --workdir ../ --threshold 90
 dotnet minicover report --workdir ../ --threshold 90
