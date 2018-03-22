@@ -63,31 +63,7 @@ namespace Sudoku.Reducers
                     }
                 }
 
-                if (parallelNumbers.Count < 2)
-                {
-                    continue;
-                }
-
-                // a) number of options == number of parallels
-                if (parallelNumbers.Count == cellsForNumber.Count)
-                {
-                    foreach (Cell cell in cellsForNumber)
-                    {
-                        if (cell.Candidates.Count > parallelNumbers.Count)
-                        {
-                            changed = true;
-                            cell.Candidates.RemoveAll(x => !parallelNumbers.Contains(x));
-                        }
-                    }
-
-                    processedNumbers.AddRange(parallelNumbers);
-
-                    continue;
-                }
-
-                // b) we have more cells than parallel numbers, but count(parallels) cells are exclusive
-                List<Cell> exclusiveParallelCells = cellsForNumber.Where(x => x.Candidates.Count == parallelNumbers.Count).ToList();
-                if (exclusiveParallelCells.Count != parallelNumbers.Count)
+                if (parallelNumbers.Count < 2 || parallelNumbers.Count != cellsForNumber.Count)
                 {
                     continue;
                 }
@@ -97,11 +73,44 @@ namespace Sudoku.Reducers
                     if (cell.Candidates.Count > parallelNumbers.Count)
                     {
                         changed = true;
-                        cell.Candidates.RemoveAll(x => parallelNumbers.Contains(x));
+                        cell.Candidates.RemoveAll(x => !parallelNumbers.Contains(x));
                     }
                 }
 
                 processedNumbers.AddRange(parallelNumbers);
+            }
+
+            List<int> remainingCandidates = cells.SelectMany(x => x.Candidates).Distinct().ToList();
+            remainingCandidates.Sort();
+
+            List<List<int>> parallelOptions = PermutatePartParallelCells(remainingCandidates);
+            foreach (List<int> list in parallelOptions)
+            {
+                List<Cell> parallelCells = cells.Where(x => AreIntListsEqual(x.Candidates, list)).ToList();
+                if (parallelCells.Count != list.Count)
+                {
+                    continue;
+                }
+
+                bool changedCells = false;
+                foreach (Cell cell in cells)
+                {
+                    if (!AreIntListsEqual(cell.Candidates, list))
+                    {
+                        int before = cell.Candidates.Count;
+                        cell.Candidates.RemoveAll(x => list.Contains(x));
+                        if (cell.Candidates.Count != before)
+                        {
+                            changedCells = true;
+                            changed = true;
+                        }
+                    }
+                }
+
+                if (changedCells)
+                {
+                    break;
+                }
             }
 
             if (changed)
@@ -110,6 +119,28 @@ namespace Sudoku.Reducers
             }
 
             return new List<Cell>();
+        }
+
+        private static List<List<int>> PermutatePartParallelCells(List<int> partParallelNumbers, List<int> existingList = null)
+        {
+            existingList = existingList ?? new List<int>();
+            List<List<int>> list = new List<List<int>>();
+            foreach (int partParallelNumber in partParallelNumbers)
+            {
+                List<int> newList = existingList.Append(partParallelNumber).ToList();
+                if (newList.Count > 1)
+                {
+                    list.Add(newList);
+                }
+
+                List<int> remainingNumbers = partParallelNumbers.Where(x => x > partParallelNumber).ToList();
+                if (remainingNumbers.Any())
+                {
+                    list.AddRange(PermutatePartParallelCells(remainingNumbers, newList));
+                }
+            }
+
+            return list;
         }
 
         private static bool AreListsEqual(List<Cell> left, List<Cell> right)
@@ -127,6 +158,24 @@ namespace Sudoku.Reducers
                 }
 
                 if (left[i].Row != right[i].Row)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool AreIntListsEqual(List<int> left, List<int> right)
+        {
+            if (left.Count != right.Count)
+            {
+                return false;
+            }
+
+            foreach (int number in right)
+            {
+                if (!left.Contains(number))
                 {
                     return false;
                 }

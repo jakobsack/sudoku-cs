@@ -54,6 +54,25 @@ namespace Sudoku.Test.Reducers
         }
 
         [Fact]
+        public void FindParallelCandidatesWithPartParallelsTest()
+        {
+            List<Cell> cells = new List<Cell>
+            {
+                new Cell(0, 0, new List<int> { 1, 3 }),
+                new Cell(1, 0, new List<int> { 1, 2 }),
+                new Cell(2, 0, new List<int> { 1, 2 }),
+                new Cell(3, 0, new List<int> { 3, 4 }),
+            };
+
+            List<Cell> result = EqualOptionsReducerMock.FindParallelCandidates(cells);
+            Assert.Equal(4, result.Count());
+            Assert.Equal(new List<int> { 3 }, result[0].Candidates);
+            Assert.Equal(new List<int> { 1, 2 }, result[1].Candidates);
+            Assert.Equal(new List<int> { 1, 2 }, result[2].Candidates);
+            Assert.Equal(new List<int> { 3, 4 }, result[3].Candidates);
+        }
+
+        [Fact]
         public void FindParallelCandidatesWithNoParallelsTest()
         {
             List<Cell> cells = new List<Cell>
