@@ -38,7 +38,7 @@ namespace Sudoku
             Field = new Board();
             iterations = 0;
             initialUnknown = 0;
-            maxBacktrackLevel = 2;
+            maxBacktrackLevel = 1;
             assumedCells = new List<Cell>();
         }
 
