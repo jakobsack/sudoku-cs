@@ -5,4 +5,5 @@ obj
 # coverage
 coverage-html
 coverage.json
+coverage.opencover.xml
 coverage-hits.txt

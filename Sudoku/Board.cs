@@ -44,6 +44,11 @@ namespace Sudoku
 
         public Board(Board board)
         {
+            if (board == null)
+            {
+                throw new ArgumentNullException(nameof(board));
+            }
+
             BacktrackLevel = board.BacktrackLevel + 1;
             cells = board.cells.Select(x => new Cell(x)).ToList();
         }
@@ -97,18 +102,18 @@ namespace Sudoku
         /// <summary>
         /// Calculates the number of cells with unknown number.
         /// </summary>
-        /// <returns>Number of cells with unknown number</returns>
+        /// <returns>Number of cells with unknown number.</returns>
         public int UnknownValues()
         {
             return cells.Where(x => x.Number == 0).Count();
         }
 
         /// <summary>
-        /// Returns a clone of the cell at the given position
+        /// Returns a clone of the cell at the given position.
         /// </summary>
-        /// <param name="column">Column in the grid</param>
-        /// <param name="row">Row on the grid</param>
-        /// <returns>A clone of the cell</returns>
+        /// <param name="column">Column in the grid.</param>
+        /// <param name="row">Row on the grid.</param>
+        /// <returns>A clone of the cell.</returns>
         public Cell GetCell(int column, int row)
         {
             return new Cell(cells[CellPosition(column, row)]);
@@ -119,10 +124,15 @@ namespace Sudoku
         ///
         /// Before inserting the cell in the grid all candidates that were not part of the previous cell are removed.
         /// </summary>
-        /// <param name="cell">Cell with the new data</param>
+        /// <param name="cell">Cell with the new data.</param>
         /// <exception cref="Exception">Thrown if previous cell contained a number but new one does not.</exception>
         public void ReplaceCell(Cell cell)
         {
+            if (cell == null)
+            {
+                throw new ArgumentNullException(nameof(cell));
+            }
+
             Cell oldCell = GetCell(cell.Column, cell.Row);
 
             if (oldCell.Number != 0 && oldCell.Number != cell.Number)
@@ -148,11 +158,16 @@ namespace Sudoku
         /// <summary>
         /// Replaces several cells in the grid.
         ///
-        /// See <see cref="ReplaceCell" /> for more information
+        /// See <see cref="ReplaceCell" /> for more information.
         /// </summary>
-        /// <param name="cells">Collection of the new cells</param>
+        /// <param name="cells">Collection of the new cells.</param>
         public void ReplaceCells(IEnumerable<Cell> cells)
         {
+            if (cells == null)
+            {
+                throw new ArgumentNullException(nameof(cells));
+            }
+
             foreach (Cell cell in cells)
             {
                 ReplaceCell(cell);
@@ -207,11 +222,11 @@ namespace Sudoku
         }
 
         /// <summary>
-        /// Calculates the linear position of the Cell
+        /// Calculates the linear position of the Cell.
         /// </summary>
-        /// <param name="column">Column in the grid</param>
-        /// <param name="row">Row on the grid</param>
-        /// <returns>Int</returns>
+        /// <param name="column">Column in the grid.</param>
+        /// <param name="row">Row on the grid.</param>
+        /// <returns>Int.</returns>
         private static int CellPosition(int column, int row)
         {
             return row * 9 + column;
@@ -220,7 +235,7 @@ namespace Sudoku
         /// <summary>
         /// Removes the number of the changed cell from the list of candidates in all affected cells.
         /// </summary>
-        /// <param name="changedCell">Cell with the updated values</param>
+        /// <param name="changedCell">Cell with the updated values.</param>
         private void UpdateCandidates(Cell changedCell)
         {
             foreach (Cell cell in cells)

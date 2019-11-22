@@ -32,6 +32,11 @@ namespace Sudoku.Solvers
 
         public static List<Cell> FindSingles(List<Cell> cells)
         {
+            if (cells == null)
+            {
+                throw new ArgumentNullException(nameof(cells));
+            }
+
             List<Cell> singles = new List<Cell>();
 
             for (int number = 1; number <= 9; number++)

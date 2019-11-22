@@ -32,6 +32,11 @@ namespace Sudoku.Reducers
 
         public static List<Cell> FindParallelCandidates(List<Cell> cells)
         {
+            if (cells == null)
+            {
+                throw new ArgumentNullException(nameof(cells));
+            }
+
             bool changed = false;
 
             List<int> processedNumbers = new List<int>();

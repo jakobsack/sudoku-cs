@@ -22,8 +22,8 @@ namespace Sudoku
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Reducers;
-    using Solvers;
+    using Sudoku.Reducers;
+    using Sudoku.Solvers;
 
     public class Engine
     {

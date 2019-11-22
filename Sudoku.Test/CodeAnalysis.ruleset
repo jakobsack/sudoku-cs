@@ -3,6 +3,7 @@
   <Include Path="../CodeAnalysis.ruleset" Action="Default" />
 
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1600" Action="None" />
     <Rule Id="CA1822" Action="None" />
   </Rules>
 </RuleSet>

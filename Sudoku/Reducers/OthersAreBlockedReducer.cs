@@ -32,6 +32,11 @@ namespace Sudoku.Reducers
 
         public static List<Cell> FindOtherwiseBlockedCells(List<List<Cell>> cellLists)
         {
+            if (cellLists == null)
+            {
+                throw new ArgumentNullException(nameof(cellLists));
+            }
+
             bool changes = false;
             List<(int, int)> availableQuads = cellLists[0].Select(x => x.Quad).Distinct().ToList();
 

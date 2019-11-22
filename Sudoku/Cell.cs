@@ -35,6 +35,11 @@ namespace Sudoku
 
         public Cell(Cell cell)
         {
+            if (cell == null)
+            {
+                throw new ArgumentNullException(nameof(cell));
+            }
+
             Column = cell.Column;
             Row = cell.Row;
             Number = cell.Number;
