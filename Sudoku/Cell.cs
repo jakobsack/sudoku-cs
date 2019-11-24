@@ -25,12 +25,18 @@ namespace Sudoku
     {
         private int number;
 
-        public Cell(int column, int row, List<int> candidates = null)
+        public Cell(int column, int row)
         {
             Column = column;
             Row = row;
             Number = 0;
-            Candidates = candidates ?? new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            Candidates = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        }
+
+        public Cell(int column, int row, List<int> candidates)
+        : this(column, row)
+        {
+            Candidates = candidates;
         }
 
         public Cell(Cell cell)

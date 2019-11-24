@@ -126,9 +126,13 @@ namespace Sudoku.Reducers
             return new List<Cell>();
         }
 
-        private static List<List<int>> PermutatePartParallelCells(List<int> partParallelNumbers, List<int> existingList = null)
+        private static List<List<int>> PermutatePartParallelCells(List<int> partParallelNumbers)
         {
-            existingList = existingList ?? new List<int>();
+            return PermutatePartParallelCells(partParallelNumbers, new List<int>());
+        }
+
+        private static List<List<int>> PermutatePartParallelCells(List<int> partParallelNumbers, List<int> existingList)
+        {
             List<List<int>> list = new List<List<int>>();
             foreach (int partParallelNumber in partParallelNumbers)
             {
